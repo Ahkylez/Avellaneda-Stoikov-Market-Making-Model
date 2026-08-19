@@ -2,7 +2,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def generate_midprice(seed : int, path_count : int, point_count : int, initial_price : float, volatility : float) -> np.ndarray:
+def generate_midprice(initial_price : float, volatility : float, time_horizon : float = 2.0, path_count : int = 1, point_count : int = 1000, seed : int = 12345) -> np.ndarray:
+    """
+    Uses brownian motion to model a stock. Uses arthmetic brownian motion for now.
+
+    S_t = s + sigma * W_t 
+
+    Where W_t = sqrt(dt) * Z
+    """
+
     T : float      = 2.0
     t : np.ndarray = np.linspace(0, T, point_count)
     dt = t[1] - t[0]
@@ -11,10 +19,9 @@ def generate_midprice(seed : int, path_count : int, point_count : int, initial_p
     Z : np.ndarray = rng.normal(loc=0.0, scale=1.0, size=(path_count, point_count))
 
     dW = np.sqrt(dt) * Z
-    Wt = np.cumsum(dW, axis=1)
+    Wt = np.cumsum(dW, axis=1) # this gives the actual points of the brownian motion
 
     S = initial_price + volatility * Wt
-    plot_midprice(t, S)
     return S
 
 def plot_midprice(t: np.ndarray, S : np.ndarray):
@@ -36,10 +43,6 @@ if __name__ == "__main__":
 
     generate_midprice(seed=seed, path_count=paths, point_count=points, initial_price=initial_price, volatility=sigma)
 
-#St = s + sigma * Wt
-
-# First we can make Wt
-# Sqrt(delta t) * Z
 
 
 
