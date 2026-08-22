@@ -23,42 +23,63 @@ s = 100
 T = 1.0
 sigma = 2
 var = sigma*sigma
-#dt = 0.005
+
 points = 1000
 q = 0
 gamma = 0.1
 k = 1.5
 M = 0.5
+cash = 0
 
-#S = generate_midprice(s, sigma, T, point_count=int(T/dt) + 1)
-S = generate_midprice(s, sigma, T, point_count=points)
-
-#t : np.ndarray = np.linspace(0, T, int(T/dt) + 1)
+# duplicate code fix later
 t : np.ndarray = np.linspace(0, T, points)
+dt = t[1] - t[0]
 
-r = S[0] - q * gamma * var * (T - t)
+# arrival parameter
+A = np.exp(-k * M/2) / dt
+S = generate_midprice(s, sigma, T, point_count=points, path_count=1000)
+rng : np.random.Generator = np.random.default_rng(seed=12345)
+for path in S:
+    q = 0
+    cash = 0
+    arrival_bid = np.zeros_like(path)
+    arrival_ask= np.zeros_like(path)
 
-db = gamma * q * var * (T - t) + 1/gamma * np.log(1 + gamma/k)
-da = -gamma * q * var * (T - t) + 1/gamma * np.log(1 + gamma/k)
+    profits = []
+    final_qs = []
 
-plt.figure(figsize=(16, 8))
-plt.plot(t, S[0], label="Mid-Price", color="black")
-plt.plot(t, r, label="Indifference/Reservation Price", color="blue", linestyle="--")
-plt.scatter(t, S[0] + da, label="Optimal Ask", color="red", marker="*")
-plt.scatter(t, S[0] - db, label="Optimal Bid", color="green", marker="o")
+    for i in range(len(path)):
+        r = path - q * gamma * var * (T - t[i])
 
-plt.title("Avellaneda-Stoikov Inventory Strategy")
-plt.xlabel("Time (Years)")
-plt.ylabel("Price")
-plt.legend()
-plt.savefig("market_plot.png")
-print(db)
+        db = gamma * q * var * (T - t[i]) + 1/gamma * np.log(1 + gamma/k)
+        da = -gamma * q * var * (T - t[i]) + 1/gamma * np.log(1 + gamma/k)
 
+        bid_price = path[i] - db
+        ask_price = path[i] + da
 
+        arrival_bid[i] = A * np.exp(-k * db)
+        arrival_ask[i] = A * np.exp(-k * da)
 
-# r = s - q * gamma * var * (T - t)
+        p_bid = arrival_bid[i] * dt
+        p_ask = arrival_ask[i] * dt
 
-# db = gamma * q * var * (T - t) + 1/gamma
+        if rng.uniform(0, 1) < p_bid:
+            q += 1
+            cash -= bid_price
+
+        if rng.uniform(0, 1) < p_ask:
+            q -= 1
+            cash += ask_price
+
+    profit = cash + q * path[-1]  
+    profits.append(profit)
+    final_qs.append(q)
+
+print("Mean profit:", np.mean(profits), "Std:", np.std(profits))
+print("Mean final q:", np.mean(final_qs), "Std:", np.std(final_qs))
+        
+        
+
 
 
 
