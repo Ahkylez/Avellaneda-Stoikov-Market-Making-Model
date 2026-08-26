@@ -1,6 +1,5 @@
 # Find the midprice of the stock
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def generate_midprice(dt: float, initial_price : float, volatility : float, time_horizon : float, seed : float | None, path_count : int = 1, point_count : int = 1000) -> np.ndarray:
@@ -12,9 +11,7 @@ def generate_midprice(dt: float, initial_price : float, volatility : float, time
     Where W_t = sqrt(dt) * Z
     """
     rng : np.random.Generator = np.random.default_rng(seed)
-    
     Z : np.ndarray = rng.normal(loc=0.0, scale=1.0, size=(path_count, point_count))
-
     dW = np.sqrt(dt) * Z
 
     # make sure inital price is actually the inital price.
@@ -44,12 +41,5 @@ if __name__ == "__main__":
     T : float = 2.0
 
     generate_midprice(seed=seed, path_count=paths, time_horizon=T, point_count=points,  initial_price=initial_price, volatility=sigma)
-
-
-
-
-
-
-
 
 
