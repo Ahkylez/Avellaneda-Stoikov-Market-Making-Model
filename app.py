@@ -28,7 +28,7 @@ class model_parameters:
     init_cash : float
 
 def get_slider_params() -> model_parameters:
-    simulations : int = st.sidebar.slider(label="Simulation Count", min_value=1, max_value=1000)
+    simulations : int = st.sidebar.slider(label="Simulation Count", min_value=1, max_value=1000, value=1000)
     s : float = st.sidebar.slider(label="Inital Price", min_value=0, max_value=100, value=100, on_change=update_seed)
     T : float = st.sidebar.slider(label="Time Horizon", min_value=0.1, max_value=10.0, value=1.0)
     sigma : float = st.sidebar.slider(label="Volatility", min_value=0.1, max_value=10.0, value=1.0)
