@@ -22,15 +22,6 @@ def generate_midprice(dt: float, initial_price : float, volatility : float, time
     S = initial_price + volatility * Wt
     return S
 
-def plot_midprice(t: np.ndarray, S : np.ndarray):
-    for i in range(paths):
-        plt.plot(t, S[i])
-
-    plt.title("Arithmetic Brownian Motion")
-    plt.xlabel("Time (Years)")
-    plt.ylabel("Stock Price")
-    plt.savefig("brownian_plot.png")
-    print("Plot saved to brownian_plot.png")
 
 if __name__ == "__main__":
     seed : int = 12345
