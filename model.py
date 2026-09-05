@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import numpy as np
-from brownian_motion import generate_midprice
+from brownian_motion import MotionType, generate_midprice
 
 @dataclass
 class ModelParameters:
@@ -35,7 +35,7 @@ def run_avellaneda_model(p : ModelParameters, seed: int) -> SimulationResults:
     dt = p.T/p.N
     t : np.ndarray = np.linspace(0.0, p.N*dt, p.N)
     # add rng as input instead of seed. More customizable that way.
-    S : np.ndarray = generate_midprice(dt=dt, initial_price=p.s, volatility=p.sigma, time_horizon=p.T, seed=seed, point_count=p.N, path_count=p.simulations)
+    S : np.ndarray = generate_midprice(motion_type=MotionType.GEOMETRIC, dt=dt, initial_price=p.s, volatility=p.sigma, seed=seed, path_count=p.simulations, point_count=p.N)
     
 
     reservations = np.empty_like(S)

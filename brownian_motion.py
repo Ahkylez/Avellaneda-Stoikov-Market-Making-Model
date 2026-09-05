@@ -20,8 +20,7 @@ def _generate_brownian_motion(dt: float, point_count: int, seed: float | None, p
 
     return Wt
 
-
-def generate_midprice(motion_type: MotionType, dt: float, initial_price : float, volatility : float, time_horizon : float, seed: float | None, path_count : int = 1, point_count : int = 1000) -> np.ndarray:
+def generate_midprice(motion_type: MotionType, dt: float, initial_price : float, volatility : float, seed: float | None, path_count : int = 1, point_count : int = 1000) -> np.ndarray:
     """
     Uses Arithmetic Brownian Motion to model a stock. Uses arithmetic brownian motion for now.
 
@@ -54,7 +53,7 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
     S = generate_midprice(motion_type=MotionType.GEOMETRIC, dt=T/points, initial_price=initial_price,
-                        volatility=sigma, time_horizon=T, seed=seed, path_count=paths, point_count=points)
+                        volatility=sigma, seed=seed, path_count=paths, point_count=points)
     plt.figure()
     for i in range(paths):
         plt.plot(S[i])
@@ -64,7 +63,7 @@ if __name__ == "__main__":
     plt.savefig("geometric_brownian_motion.png")
 
     S = generate_midprice(motion_type=MotionType.ARITHMETIC, dt=T/points, initial_price=initial_price,
-                        volatility=sigma, time_horizon=T, seed=seed, path_count=paths, point_count=points)
+                        volatility=sigma, seed=seed, path_count=paths, point_count=points)
     plt.figure()
     for i in range(paths):
         plt.plot(S[i])
