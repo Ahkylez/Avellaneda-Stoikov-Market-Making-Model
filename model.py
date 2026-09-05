@@ -27,14 +27,16 @@ class SimulationResults:
     profits : np.ndarray
     final_q : np.ndarray
 
+
 def run_avellaneda_model(p : ModelParameters, seed: int) -> SimulationResults:
     rng : np.random.Generator = np.random.default_rng(seed=seed)
     var = p.sigma*p.sigma
 
     dt = p.T/p.N
+    t : np.ndarray = np.linspace(0.0, p.N*dt, p.N)
     # add rng as input instead of seed. More customizable that way.
     S : np.ndarray = generate_midprice(dt=dt, initial_price=p.s, volatility=p.sigma, time_horizon=p.T, seed=seed, point_count=p.N, path_count=p.simulations)
-    t : np.ndarray = np.linspace(0.0, p.N*dt, p.N)
+    
 
     reservations = np.empty_like(S)
     bid_prices = np.empty_like(S)
